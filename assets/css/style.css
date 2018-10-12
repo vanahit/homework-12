@@ -1,0 +1,152 @@
+
+body, h1 {
+	padding: 0;
+	margin: 0;
+}
+header {
+	background-color: #ce1010;
+	line-height: 70px;
+	font-size: 38px;
+	color: white;
+}
+.center-italic-bold {
+	text-align: center;
+	font-style: italic;
+	font-weight: bold;
+}
+.subtitle {
+	margin-top: 45px;
+	float: left;
+	width: 50%;
+	font-size: 36px;
+	color: #ce1010;
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.flex-container {
+	padding: 30px;
+	float: left;
+	width: 50%;
+	display: flex;
+	justify-content: center;
+	box-sizing: border-box;
+}
+.flex-child {
+	margin: 30px;
+	text-align: center;
+	color: #9f9f9f;
+}
+img {
+	width: 55px;
+}
+.track {
+	width: 130px;
+	height: 55px;
+	margin-bottom: 15px;
+}
+.dashed-line {
+	border-bottom: 2px dashed #585454;
+	height: 50%;
+}
+.ashphalt {
+	background-color: #d8d8d8;
+}
+.ice {
+	background-color: #c5f1f2;
+}
+.ground{
+	background-color: #d9d1a1;
+}
+.selected-element {
+	border: 2px solid red;
+}
+.button-start {
+	text-align: center;
+}
+button:hover {
+	cursor: pointer;
+}
+button {
+	font-size: 20px;
+	color: #9f9f9f;
+	background-color: white;
+	border: 3px solid #9f9f9f;
+	border-radius: 5px;
+	width: 145px;
+	height: 40px;
+}
+.button-enabled {
+	border-color: #e10000;
+	color: #e10000;
+}
+.game-area {
+	display: none;
+}
+
+table {
+	margin-top: 20px;
+	border: 2px dashed #585454;
+	width: 100%;
+	border-collapse: collapse;
+}
+td {
+	height: 134px;
+	border: 2px dashed #585454;	
+}
+td:nth-child(2) {
+	width: 80%;
+}
+td:nth-child(1) {
+	width: 10%;
+	text-align: right;
+	border-right: 4px dashed #979797;
+}
+td:nth-child(3) {
+	border-left: 4px dashed #979797;
+}
+.vertical-text {
+	color: #979797;
+	writing-mode: tb-rl;
+	transform:rotate(360deg);
+	font-size: 20px;
+}
+.trace {
+	display: inline-block;
+	visibility: hidden;
+	width: 85px;
+	height: 24px;
+}
+.ground-trace {
+	background-image: linear-gradient(to right, #d9d1a1, #a98016);
+}
+.ice-trace {
+	background-image: linear-gradient(to right, #c5f1f2, white);
+}
+.asphalt-trace {
+	background-image: linear-gradient(to right, #d8d8d8, #777777);
+}
+.icon-with-trace {
+	height:100%;
+	z-index: 9998;
+	height:40px;
+}
+.car-trace {
+	display: inline;
+}
+.winner-text {
+	display: none;
+	position: absolute;
+	text-align: center;
+	line-height: 140px;
+	color: white;
+	font-size: 48px;
+	width: 40%;
+	height: 140px;
+	margin-top: 47%;
+	margin-left: 30%;
+	background-color: grey;
+	border-radius: 5px;
+}
