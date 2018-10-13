@@ -5,7 +5,7 @@ class Car {
 		this.speed = speed;
 		this.color = color;
 		this.icon = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-						 width="48.997px" height="40px">
+						 width="48.997px" height="48.997px">
 					<g>
 						<path fill = "#${this.color}" d="M45.961,18.702c-0.033-0.038-0.061-0.075-0.1-0.112l-1.717-1.657c1.424-0.323,2.957-1.516,2.957-2.74
 							c0-1.426-1.979-1.932-3.668-1.932c-1.766,0-1.971,1.21-1.992,2.065l-4.43-4.271c-0.9-0.891-2.607-1.592-3.883-1.592H24.5h-0.002
@@ -28,6 +28,7 @@ class Car {
 					</svg>`
 		this.x;
 		this.timerId;
+		this.selected = false;
 	}
 	getCarIcon(traceClass) {
 		let div = document.createElement('div');
@@ -38,6 +39,7 @@ class Car {
 	move(idName, factor) {
 		let car = document.querySelector('#' + idName);
 		this.x = car.getBoundingClientRect().left;
+		this.y = car.getBoundingClientRect().top;
 		this.timerId = setInterval(() => {
 			this.x += this.speed / 5 * factor;
 			car.style.position = 'absolute';
@@ -45,11 +47,11 @@ class Car {
 		}, 200);
 	}
 }
-
 class Mercedes extends Car {
 	constructor(speed, color) {
 		super(speed, color);
 		this.name = 'Mercedes';
+		this.id = 1;
 	}
 }
 
@@ -57,24 +59,27 @@ class Bmw extends Car {
 	constructor(speed, color) {
 		super(speed, color);
 		this.name = 'BMW';
+		this.id = 2;
+	}
+}
+class Toyota extends Car {
+	constructor(speed, color) {
+		super(speed, color);
+		this.name = 'Toyota';
+		this.id = 3;
 	}
 }
 class Lexus extends Car {
 	constructor(speed, color) {
 		super(speed, color);
 		this.name = 'Lexus';
-	}
-}
-
-class Toyota extends Car {
-	constructor(speed, color) {
-		super(speed, color);
-		this.name = 'Toyota';
+		this.id = 4;
 	}
 }
 class Audi extends Car {
 	constructor(speed, color) {
 		super(speed, color);
 		this.name = 'Audi';
+		this.id = 5;
 	}
 }

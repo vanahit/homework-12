@@ -61,12 +61,11 @@ class App {
 		});
 	}
 	carAreaRender() {
-		let i = 0;
 		let carsArea = document.querySelector('.cars-area');
 		this.carList.forEach(car => {
 			let flexChild = document.createElement('div');
 			flexChild.setAttribute('class', 'flex-child');
-			flexChild.setAttribute('id', 'car'+ i);
+			flexChild.setAttribute('id', 'car'+ car.id);
 			let iconArea = document.createElement('div');
 			iconArea.innerHTML = car.icon;
 			let carMark = document.createElement('span');
@@ -78,9 +77,8 @@ class App {
 			flexChild.appendChild(iconArea);
 			flexChild.appendChild(carMark);
 			flexChild.appendChild(carSpeed);
-			flexChild.addEventListener('click', this.getSelectedCars)
+			flexChild.addEventListener('click', this.getSelectedCars);
 			carsArea.appendChild(flexChild);
-			i++;
 		})
 	}
 	tracesHidden() {
@@ -98,62 +96,71 @@ class App {
 	getTraceCarDiv(car) {
 		let iconWithTrace = document.createElement('div');
 		iconWithTrace.setAttribute('class', 'icon-with-trace');
+		let traceDivParent = document.createElement('div');
+		traceDivParent.setAttribute('class', 'trace-parent');
 		let traceDiv = this.track.getTrace();
-		iconWithTrace.appendChild(traceDiv);
+		traceDivParent.appendChild(traceDiv);
+		let iconDivParent = document.createElement('div');
+		iconDivParent.setAttribute('class', 'trace-parent');
 		let iconDiv = car.getCarIcon();
-		iconWithTrace.appendChild(iconDiv);
+		iconDivParent.appendChild(iconDiv);
+		iconWithTrace.appendChild(traceDivParent);
+		iconWithTrace.appendChild(iconDivParent);
 		return iconWithTrace;
 	}
-	getSelectedCars(event) {
-		let carId = +event.currentTarget.id.slice(3); 
-		let selectedCarId = this.selectedCars.indexOf(this.carList[carId]);
+	tableTdUpdte(carId) {
+		let iconWithTrace;
 		let gameArea = document.querySelector('#game');
 		let allTd = gameArea.querySelectorAll('.first-td');
-		let iconWithTrace;
-		if (this.selectedCars.length < 3 && !this.carList[carId].selected) {
-			this.selectedAll++;
-			this.carList[carId].selected = true;
-			this.selectedCars.push(this.carList[carId]);
-			event.currentTarget.setAttribute('class', 'flex-child selected-element')
-			
-			for (let i = 0; i < allTd.length; i++) {
-				if (this.isTableSeen) {
-					if (!allTd[i].innerHTML) {
-						if (this.selectedCars.indexOf(this.carList[carId]) === -1) {
-							this.selectedCars.push(this.carList[carId]);
-							this.selectedAll++;
-						}
-						iconWithTrace = this.getTraceCarDiv(this.carList[carId]);
-						iconWithTrace.setAttribute('id', 'car-id' + i);
-						allTd[i].appendChild(iconWithTrace);
-						allTd[i].setAttribute('id', 'car-td' + carId);
-						break;
-					}
-				} else {
+		for (let i = 0; i < allTd.length; i++) {
+			if (!allTd[i].innerHTML) {
+				if (this.selectedCars.indexOf(this.carList[carId]) === -1) {
 					this.selectedCars.push(this.carList[carId]);
-					this.selectedAll++;
 				}
+				iconWithTrace = this.getTraceCarDiv(this.carList[carId]);
+				iconWithTrace.setAttribute('id', 'car-id' + carId);
+				allTd[i].appendChild(iconWithTrace);
+				allTd[i].setAttribute('id', 'car-td' + carId);
+				break;
 			} 
-		} else if (this.selectedAll !== 0 && this.carList[carId].selected) {
-			this.carList[carId].selected = false;
-			this.selectedCars.splice(selectedCarId, 1);
-			this.selectedAll--;
-			event.currentTarget.setAttribute('class', 'flex-child');
-			if (this.isTableSeen) {
-				let emptyTd = document.querySelector('#car-td' + carId);
-				emptyTd.innerHTML = '';
-			}
 		}
-		this.chackIfAllSelected();
-	
 	}
-	chackIfAllSelected() {
+	carNotSelected(event, carId) {
+		this.selectedAll++;
+		this.carList[carId].selected = true;
+		this.selectedCars.push(this.carList[carId]);
+		event.currentTarget.setAttribute('class', 'flex-child selected-element')
+		if (this.isTableSeen) {
+			this.tableTdUpdte(carId);		
+		} 
+	}
+	carSelected(event, carId) {
+		let selectedCarId = this.selectedCars.indexOf(this.carList[carId]);
+		this.carList[carId].selected = false;
+		this.selectedCars.splice(selectedCarId, 1);
+		this.selectedAll--;
+		event.currentTarget.setAttribute('class', 'flex-child');
+		if (this.isTableSeen) {
+			let emptyTd = document.querySelector('#car-td' + carId);
+			emptyTd.innerHTML = '';
+		}
+	}
+	getSelectedCars(event) {
+		let carId = +event.currentTarget.id.slice(3) - 1; 
+		if (this.selectedCars.length < 3 && !this.carList[carId].selected) {
+			this.carNotSelected(event, carId);
+		} else if (this.selectedAll !== 0 && this.carList[carId].selected) {
+			this.carSelected(event, carId);
+		}
+		this.checkIfAllSelected();
+	}
+	checkIfAllSelected() {
 		if (this.selectedAll === 3 && this.track) {
 			if (!this.isTableSeen) {
 				this.isTableSeen = true;
 				this.gameAreaRender();
 			}
-			this.startEbaled();
+			this.startEnabled();
 		} else {
 			this.startDesabled();
 		}
@@ -179,7 +186,7 @@ class App {
 		event.currentTarget.setAttribute('class', 'flex-child selected-element');
 		this.changeTracesColor();
 		this.changeGameAreaColor();
-		this.chackIfAllSelected();
+		this.checkIfAllSelected();
 	}
 	removeEventListeners() {
 		let carsArea = document.querySelector('.cars-area');
@@ -198,7 +205,7 @@ class App {
 		startBtn.setAttribute('class', 'start');
 		startBtn.removeEventListener('click', this.allCarsMoveStart);
 	}
-	startEbaled() {
+	startEnabled() {
 		let startBtn = document.querySelector('.start');
 		startBtn.setAttribute('class', 'start button-enabled');
 		startBtn.addEventListener('click', this.allCarsMoveStart);
@@ -216,19 +223,21 @@ class App {
 		start.setAttribute('class', 'road-start vertical-text');
 		finish.appendChild(finishTextNode);
 		finish.setAttribute('class', 'road-start vertical-text');
-
+		let winnerDiv = document.createElement('div');
+		winnerDiv.setAttribute('class', 'winner-text');
 		for (let i = 0; i < this.selectedCars.length; i++) {
 			let tr = document.createElement('tr');
 			let firstTd = document.createElement('td');
 			firstTd.setAttribute('class', 'first-td');
-			firstTd.setAttribute('id', 'car-td' + this.carList.indexOf(this.selectedCars[i]));
+			firstTd.setAttribute('id', 'car-td' + (this.selectedCars[i].id - 1));
 			let iconWithTrace = this.getTraceCarDiv(this.selectedCars[i]);
-			iconWithTrace.setAttribute('id', 'car-id' + i);
+			iconWithTrace.setAttribute('id', 'car-id' + (this.selectedCars[i].id - 1));
 			firstTd.appendChild(iconWithTrace);
 			let secondTd = document.createElement('td');
 			let thirdTd = document.createElement('td');
 			if (i === 1) {
 				secondTd.appendChild(start);
+				secondTd.appendChild(winnerDiv);
 				thirdTd.appendChild(finish);
 			}
 			tr.appendChild(firstTd);
@@ -239,35 +248,34 @@ class App {
 	}
 	winnerDiv(carName) {
 		let winner = document.querySelector('.winner-text');
-		winner.style.display = 'block';
+		winner.style.display = 'inline';
 		winner.textContent = 'The winner is ' + carName;
 	}
 	clearCarsIntervaId() {
 		this.selectedCars.forEach(car => {
 			clearInterval(car.timerId);
-			
 		})
 	}
 	allCarsMoveStart() {
 		this.removeEventListeners();
+		let car = document.querySelector('#car-id1');
 		let newPromise = new Promise((resolve, reject) => {
-			setTimeout(this.tracesVisible, 200);
+		let setTimoutId = setTimeout(this.tracesVisible, 200);
 			for (let i = 0; i < this.selectedCars.length; i++) {
-				this.selectedCars[i].move('car-id' + i, this.track.factor);
+				this.selectedCars[i].move('car-id' + (this.selectedCars[i].id - 1), this.track.factor);
 				this.intervalId = setInterval(() => {
-					if (this.selectedCars[i].x >= 1020) {
-						this.winnerDiv(this.selectedCars[i].name);
-						this.clearCarsIntervaId();	
-						this.startDesabled();
-						this.tracesHidden();
-						resolve(this.intervalId);
+					if (this.selectedCars[i].x >= screen.width - screen.width * 18.3 / 100) {
+						resolve(this.selectedCars[i].name);
 					}
-				}, 400);
+				}, 200);
 			}
-
 		})
-		.then(intervalId => {
-			clearInterval(intervalId);
+		.then((winner) => {
+			this.winnerDiv(winner);	
+			this.clearCarsIntervaId();	
+			this.startDesabled();
+			this.tracesHidden();
+			clearInterval(this.intervalId);
 		})
 	}
 }

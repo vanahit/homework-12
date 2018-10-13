@@ -17,7 +17,6 @@ class Asphalt extends Track {
 		return trace;
 	}
 }
-
 class Ice extends Track {
 	constructor(color, factor) {
 		super(color, factor);
